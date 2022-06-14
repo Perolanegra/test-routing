@@ -1,0 +1,6 @@
+.header {
+  display: flex;
+  justify-self: left;
+  flex-direction: column;
+  width: fit-content;
+}

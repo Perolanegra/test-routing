@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
+import { UsersService } from './user.service';
 
 @Component({
   selector: 'app-user',
@@ -7,29 +8,43 @@ import { Observable } from 'rxjs';
   styleUrls: ['./user.component.css'],
 })
 export class UserComponent implements OnInit {
-  users: Observable<any>;
-  constructor() {
+  textBtn = 'Add User';
+  editBtn = 'Edit';
+  users: Observable<Array<any>> = this.usersService.getAll();
+  constructor(private usersService: UsersService) {
     console.log('now im on');
   }
 
   ngOnInit() {}
 
-  delete(key: string) {
-    // this._UsersService.delete(key);
+  delete(user: { username: string; key: string }): void {
+    this.usersService.delete(user);
   }
 
-  edit(user: { username: string; key: string }) {
-    // this._funcionarioDataService.obtemFuncionario(funcionario, key);
+  edit(user: { username: string; key: string }, inputEditUserValue): void {
+    if (!inputEditUserValue) {
+      this.editBtn = 'Confirm';
+      (document.querySelector('#inputEditUser') as any).style.display = 'block';
+    } else {
+      const newUser = user;
+      newUser.username = inputEditUserValue;
+      this.usersService.edit(newUser);
+      (document.querySelector('#inputEditUser') as any).value = '';
+      (document.querySelector('#inputEditUser') as any).style.display = 'none';
+      this.editBtn = 'Edit';
+    }
   }
 
-  onSubmit() {
-    // quando funcionário submeter o form
-    // if (this.key){                 // se existir uma chave, funcionário ta editando
-    //   this._funcionarioService.edit(this.funcionario, this.key)
-    // } else {                       // Se não, ele ta inserino um novo usuário
-    //   this._funcionarioService.insert(this.funcionario)
-    // }
-    // this.funcionario = new Funcionario() // reset funcionario p/ usuário inserir proximo
-    // this.key = null                       //zerar chave tbm. Ao att pag infos zeradas
+  add(value: string, submitTime: string): void {
+    if (submitTime) {
+      this.textBtn = 'Add User';
+      (document.querySelector('#inputNewUser') as any).value = '';
+      const key = JSON.parse(localStorage.getItem('key')) + 1;
+      localStorage.setItem('key', JSON.stringify(key));
+      const user = { username: value, key };
+      this.usersService.insert(user);
+    } else {
+      this.textBtn = 'Confirm';
+    }
   }
 }

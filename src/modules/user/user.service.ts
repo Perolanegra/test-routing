@@ -1,19 +1,17 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UsersService {
-  // todos os metodos p edit, att, inserir, retornar registros de funcionario
-
-  constructor(private _angularFireDatabase: AngularFireDatabase) {}
+  constructor() {}
   private users: BehaviorSubject<Array<{ username: string; key: string }>> =
-    new BehaviorSubject(null);
+    new BehaviorSubject([]);
 
   insert(user: { username: string; key: string }) {
-    this.users.next([...this.users.getValue(), user]);
+    const arr = this.users.getValue();
+    this.users.next([...arr, user]);
   }
 
   edit(user: { username: string; key: string }) {
@@ -23,22 +21,22 @@ export class UsersService {
         const index = val.findIndex((us) => us.key === user.key);
         val[index] = user;
         this.users.next(val);
-      });
+      })
+      .unsubscribe();
   }
 
-  getAll() {
-    // retornar lista de funcionários pra view
-    // return this._angularFireDatabase.list('contato')
-    //   .snapshotChanges()
-    //   .pipe(
-    //     map(changes => {
-    //       return changes.map(data => ({ key: data.payload.key, ...data.payload.val() as {} }));
-    //     })
-    //   )
-    this.users.asObservable();
+  getAll(): Observable<any> {
+    return this.users.asObservable();
   }
 
-  delete(key: string) {
-    this._angularFireDatabase.object(`contato/${key}`).remove();
+  delete(user: any) {
+    this.users
+      .asObservable()
+      .subscribe((val) => {
+        const index = val.indexOf(user);
+        val.splice(index, 1);
+        this.users.next(val);
+      })
+      .unsubscribe();
   }
 }

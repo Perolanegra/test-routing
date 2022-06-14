@@ -1,3 +1,17 @@
+<div class="header">
+  <button
+    #btnAdd
+    type="submit"
+    (click)="
+      add(inputNewUser?.value, inputNewUser?.value);
+      inputNewUser?.style.display = 'block'
+    "
+  >
+    {{ textBtn }}
+  </button>
+  <input id="inputNewUser" style="display: none;" type="text" #inputNewUser />
+</div>
+
 <table class="table table-hover table-striped">
   <thead>
     <th>User</th>
@@ -7,11 +21,17 @@
     <tr *ngFor="let user of users | async">
       <td>{{ user.username }}</td>
       <td>
-        <button class="btn btn-info" (click)="edit(user)">
-          Editar
+        <button class="btn btn-info" (click)="edit(user, inputEditUser?.value)">
+          {{ editBtn }}
         </button>
+        <input
+          id="inputEditUser"
+          style="display: none;"
+          type="text"
+          #inputEditUser
+        />
         <button class="btn btn-danger m1-2" (click)="delete(user.key)">
-          Excluir
+          Delete
         </button>
       </td>
     </tr>
