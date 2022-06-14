@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, distinctUntilChanged } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -17,44 +16,30 @@ export class UsersService {
   }
 
   edit(user: { username: string; key: string }) {
-    this.users
-      .asObservable()
-      .pipe(
-        distinctUntilChanged(),
-        tap((val) => {
-          const index = val.findIndex((us) => us.key === user.key);
-          val[index] = user;
-          return val;
-        })
-      )
-      .subscribe((data: Array<{ username: string; key: string }>) => {
-        this.users.next(data);
-      })
-      .unsubscribe();
+    const arr = this.users.getValue();
+    const index = arr.findIndex((us) => us.key === user.key);
+    arr[index] = user;
+    this.users.next(arr);
   }
 
-  // getAll(): Observable<any> {
-  //   return this.users.asObservable();
-  //   // .pipe(
-  //   //   distinctUntilChanged(),
-  //   //   switchMap((val) => val)
-  //   // );
-  // }
-
   delete(user: any) {
-    this.users
-      .asObservable()
-      .pipe(
-        distinctUntilChanged(),
-        tap((val) => {
-          const index = val.indexOf(user);
-          val.splice(index, 1);
-          return val;
-        })
-      )
-      .subscribe((data) => {
-        this.users.next(data);
-      })
-      .unsubscribe();
+    const arr = this.users.getValue();
+    const index = arr.indexOf(user);
+    arr.splice(index, 1);
+    this.users.next(arr);
+    // this.users
+    //   .asObservable()
+    //   .pipe(
+    //     distinctUntilChanged(),
+    //     tap((val) => {
+    //       const index = val.indexOf(user);
+    //       val.splice(index, 1);
+    //       return val;
+    //     })
+    //   )
+    //   .subscribe((data) => {
+    //     this.users.next(data);
+    //   })
+    //   .unsubscribe();
   }
 }

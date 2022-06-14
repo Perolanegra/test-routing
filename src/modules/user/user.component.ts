@@ -26,7 +26,7 @@ export class UserComponent implements OnInit {
       this.editBtn = 'Confirm';
       (
         document.querySelector(`#inputEditUser_${user.key}`) as any
-      ).style.display = 'block';
+      ).style.display = 'block'; // this could be on directives
       console.log('user.key: ', user.key);
     } else {
       const newUser = user;
@@ -43,7 +43,7 @@ export class UserComponent implements OnInit {
   add(value: string, submitTime: string): void {
     if (submitTime) {
       this.textBtn = 'Add User';
-      (document.querySelector('#inputNewUser') as any).value = '';
+      (document.querySelector('#inputNewUser') as any).value = ''; // this could be on directives
       (document.querySelector('#inputNewUser') as any).style.display = 'none';
       const key = JSON.parse(localStorage.getItem('key')) + 1;
       localStorage.setItem('key', JSON.stringify(key));
