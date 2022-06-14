@@ -2,10 +2,7 @@
   <button
     #btnAdd
     type="submit"
-    (click)="
-      add(inputNewUser?.value, inputNewUser?.value);
-      inputNewUser?.style.display = 'block'
-    "
+    (click)="add(inputNewUser?.value, inputNewUser?.value)"
   >
     {{ textBtn }}
   </button>
@@ -18,21 +15,23 @@
   </thead>
 
   <tbody>
-    <tr *ngFor="let user of users | async">
+    <tr *ngFor="let user of uservice?.users | async">
       <td>{{ user.username }}</td>
       <td>
         <button class="btn btn-info" (click)="edit(user, inputEditUser?.value)">
-          {{ editBtn }}
+          Edit
         </button>
+
+        <button class="btn btn-danger m1-2" (click)="delete(user)">
+          Delete
+        </button>
+
         <input
-          id="inputEditUser"
+          [id]="'inputEditUser_' + user.key"
           style="display: none;"
           type="text"
           #inputEditUser
         />
-        <button class="btn btn-danger m1-2" (click)="delete(user.key)">
-          Delete
-        </button>
       </td>
     </tr>
   </tbody>
