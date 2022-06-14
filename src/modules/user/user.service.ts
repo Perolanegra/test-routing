@@ -1,10 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  BehaviorSubject,
-  distinctUntilChanged,
-  Observable,
-  switchMap,
-} from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 @Injectable({
